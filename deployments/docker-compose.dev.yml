@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  nginx-controller:
+    image: nginx-controller
+    build:
+      context: .
+      dockerfile: ../package/Dockerfile.dev
+    container_name: nginx-controller
+    ports:
+      - "4000:80"
+      - "3456:2345"
+    volumes:
+      - "..:/app"
+      - "./dev/nginx:/etc/nginx:ro"
+      - "/tmp/nginx-controller/go-cache:/go/pkg"
+    restart: 'no'

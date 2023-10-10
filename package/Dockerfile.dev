@@ -1,0 +1,19 @@
+FROM golang:1.20
+
+ENV GO111MODULE="on"
+ENV GOOS="linux"
+ENV CGO_ENABLED=0
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y nginx supervisor
+
+RUN go install github.com/cosmtrek/air@latest && \
+    go install github.com/go-delve/delve/cmd/dlv@latest
+
+EXPOSE 2345
+EXPOSE 80
+
+CMD go mod download && \
+    /usr/bin/supervisord -c /app/package/dev/supervisord.conf
