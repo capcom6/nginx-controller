@@ -1,0 +1,18 @@
+@baseUrl=http://localhost:4000/api/v1
+
+###
+PUT {{baseUrl}}/test.example.com HTTP/1.1
+Content-Type: application/json
+
+{
+    "upstream": [
+        {
+            "host": "https//google.com",
+            "weight": 1
+        },
+        {
+            "host": "https://yandex.ru",
+            "weight": 2
+        }
+    ]
+}

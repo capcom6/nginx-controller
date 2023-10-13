@@ -1,4 +1,4 @@
-package template
+package nginx
 
 type UpstreamServer struct {
 	Host    string
