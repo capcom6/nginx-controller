@@ -12,6 +12,6 @@ services:
       - "3456:2345"
     volumes:
       - "..:/app"
-      - "./dev/nginx:/etc/nginx:ro"
+      - "./dev/nginx:/etc/nginx"
       - "/tmp/nginx-controller/go-cache:/go/pkg"
     restart: 'no'

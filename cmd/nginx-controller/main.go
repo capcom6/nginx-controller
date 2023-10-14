@@ -9,7 +9,6 @@ import (
 	"github.com/capcom6/nginx-controller/internal/services/nginx"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 )
 
 func main() {
@@ -20,8 +19,8 @@ func main() {
 		validator.Module,
 		handlers.Module,
 		nginx.Module,
-		fx.Invoke(func(cfg config.Config, log *zap.Logger, h *fiber.App) {
-			log.Info("Config", zap.Any("config", cfg))
+		fx.Invoke(func(h *fiber.App) {
+
 		}),
 	).Run()
 }

@@ -7,12 +7,19 @@ Content-Type: application/json
 {
     "upstream": [
         {
-            "host": "https//google.com",
+            "host": "httpbin.org:443",
             "weight": 1
         },
         {
-            "host": "https://yandex.ru",
-            "weight": 2
+            "host": "google.com:443",
+            "weight": 1
         }
     ]
 }
+
+###
+DELETE {{baseUrl}}/test.example.com HTTP/1.1
+
+###
+GET http://localhost:4000 HTTP/1.1
+Host: test.example.com

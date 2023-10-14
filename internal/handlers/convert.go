@@ -24,7 +24,7 @@ func putHostnameToContext(hostname string, i PutHostname) nginx.Context {
 
 	return nginx.Context{
 		DomainName:   hostname,
-		UpstreamName: "test",
+		UpstreamName: hostname,
 		Servers:      upstreams,
 	}
 }

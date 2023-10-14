@@ -1,7 +1,8 @@
 package handlers
 
 import (
-	"bytes"
+	"errors"
+	"os"
 
 	"github.com/capcom6/nginx-controller/internal/services/nginx"
 	"github.com/go-playground/validator/v10"
@@ -18,6 +19,7 @@ func (h *Handler) Register(app fiber.Router) {
 
 	v1.Get("/", h.Get)
 	v1.Put("/:hostname", h.Put)
+	v1.Delete("/:hostname", h.Delete)
 }
 
 func (h *Handler) Get(c *fiber.Ctx) error {
@@ -46,14 +48,35 @@ func (h *Handler) Put(c *fiber.Ctx) error {
 	}
 
 	context := putHostnameToContext(c.Params("hostname"), req)
-	buffer := bytes.Buffer{}
-	if err := h.nginx.Render(context, &buffer); err != nil {
+
+	if err := h.nginx.Apply(context); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
-	return c.Send(buffer.Bytes())
+	return c.SendStatus(fiber.StatusOK)
+}
+
+func (h *Handler) Delete(c *fiber.Ctx) error {
+	hostname := c.Params("hostname")
+	if err := h.validator.Var(hostname, "hostname"); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if err := h.nginx.Remove(hostname); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return c.SendStatus(fiber.StatusNotFound)
+		}
+
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
 }
 
 func New(v *validator.Validate, n *nginx.Nginx) *Handler {
