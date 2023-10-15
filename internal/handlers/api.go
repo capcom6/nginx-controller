@@ -17,15 +17,23 @@ type Handler struct {
 func (h *Handler) Register(app fiber.Router) {
 	v1 := app.Group("/v1")
 
-	v1.Get("/", h.Get)
 	v1.Put("/hosts/:hostname", h.Put)
 	v1.Delete("/hosts/:hostname", h.Delete)
 }
 
-func (h *Handler) Get(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!")
-}
-
+//	@Summary		Replace host upstreams
+//	@Description	Replaces current configuration on hostname's upstreams
+//	@Tags			Proxy
+//	@Accept			json
+//	@Produce		json
+//	@Param			hostname	path		string			true	"Hostname"
+//	@Param			request		body		PutHostname		true	"Upstreams configuration"
+//	@Success		204			{object}	nil				"Success"
+//	@Failure		400			{object}	ErrorResponse	"Validation error"
+//	@Failure		500			{object}	ErrorResponse	"Internal server error"
+//	@Router			/v1/hosts/:hostname [put]
+//
+// Replace host upstreams
 func (h *Handler) Put(c *fiber.Ctx) error {
 	hostname := c.Params("hostname")
 	if err := h.validator.Var(hostname, "hostname"); err != nil {
@@ -58,6 +66,18 @@ func (h *Handler) Put(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
+//	@Summary		Delete host
+//	@Description	Removes host from configuration
+//	@Tags			Proxy
+//	@Produce		json
+//	@Param			hostname	path		string			true	"Hostname"
+//	@Success		204			{object}	nil				"Success"
+//	@Failure		400			{object}	ErrorResponse	"Validation error"
+//	@Failure		404			{object}	ErrorResponse	"Host not found"
+//	@Failure		500			{object}	ErrorResponse	"Internal server error"
+//	@Router			/v1/hosts/:hostname [delete]
+//
+// Delete host
 func (h *Handler) Delete(c *fiber.Ctx) error {
 	hostname := c.Params("hostname")
 	if err := h.validator.Var(hostname, "hostname"); err != nil {

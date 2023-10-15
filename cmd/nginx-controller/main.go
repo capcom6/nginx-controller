@@ -11,6 +11,17 @@ import (
 	"go.uber.org/fx"
 )
 
+//	@title			Nginx Controller
+//	@version		1.0.0
+//	@description	API for controlling nginx reverse proxy
+
+//	@contact.name	Aleksandr Soloshenko
+//	@contact.email	i@capcom.me
+
+//	@host		localhost:3000
+//	@schemes	http
+//	@BasePath	/api
+
 func main() {
 	fx.New(
 		config.Module,

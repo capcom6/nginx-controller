@@ -1,7 +1,9 @@
 ---
+# nginx-related configuration
 nginx:
-    location: /etc/nginx/conf.d/
-    template: |
+    location: /etc/nginx/conf.d/ # where to put virtual hosts configs
+    template:
+        | # template for virtual host configs, seet `text/template` package description for syntax
         upstream {{ .UpstreamName }} {
             {{ range $server := .Servers }}
                 server {{ $server.Host }}:{{ $server.Port }} {{ $server.Options }};

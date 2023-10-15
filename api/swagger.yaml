@@ -1,0 +1,106 @@
+basePath: /api
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handlers.PutHostname:
+    properties:
+      upstream:
+        items:
+          $ref: '#/definitions/handlers.Upstream'
+        type: array
+    required:
+    - upstream
+    type: object
+  handlers.Upstream:
+    properties:
+      host:
+        type: string
+      name:
+        type: string
+      port:
+        maximum: 65535
+        minimum: 1
+        type: integer
+      weight:
+        maximum: 100
+        minimum: 0
+        type: integer
+    required:
+    - host
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: i@capcom.me
+    name: Aleksandr Soloshenko
+  description: API for controlling nginx reverse proxy
+  title: Nginx Controller
+  version: 1.0.0
+paths:
+  /v1/hosts/:hostname:
+    delete:
+      description: Removes host from configuration
+      parameters:
+      - description: Hostname
+        in: path
+        name: hostname
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Host not found
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete host
+      tags:
+      - Proxy
+    put:
+      consumes:
+      - application/json
+      description: Replaces current configuration on hostname's upstreams
+      parameters:
+      - description: Hostname
+        in: path
+        name: hostname
+        required: true
+        type: string
+      - description: Upstreams configuration
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.PutHostname'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Replace host upstreams
+      tags:
+      - Proxy
+schemes:
+- http
+swagger: "2.0"
