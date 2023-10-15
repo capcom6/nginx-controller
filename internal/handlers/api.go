@@ -18,8 +18,8 @@ func (h *Handler) Register(app fiber.Router) {
 	v1 := app.Group("/v1")
 
 	v1.Get("/", h.Get)
-	v1.Put("/:hostname", h.Put)
-	v1.Delete("/:hostname", h.Delete)
+	v1.Put("/hosts/:hostname", h.Put)
+	v1.Delete("/hosts/:hostname", h.Delete)
 }
 
 func (h *Handler) Get(c *fiber.Ctx) error {

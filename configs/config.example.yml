@@ -1,19 +1,21 @@
 ---
 nginx:
-  location: /etc/nginx/conf.d/
-  template: |
-    upstream {{ .UpstreamName }} {
-        {{ range $server := .Servers }}
-            server {{ $server.Host }} {{ $server.Options }};
-        {{ end }}
-    }
-
-    server {
-
-        listen 80;
-        server_name {{ .DomainName }};
-
-        location / {
-            proxy_pass http://{{ .UpstreamName }};
+    location: /etc/nginx/conf.d/
+    template: |
+        upstream {{ .UpstreamName }} {
+            {{ range $server := .Servers }}
+                server {{ $server.Host }}:{{ $server.Port }} {{ $server.Options }};
+            {{ end }}
         }
-    }
+
+        server {
+
+            listen 80;
+            server_name {{ .DomainName }};
+
+            location / {
+                proxy_pass http://{{ .UpstreamName }};
+
+                include    proxy.conf;
+            }
+        }

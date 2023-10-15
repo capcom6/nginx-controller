@@ -2,6 +2,7 @@ package nginx
 
 type UpstreamServer struct {
 	Host    string
+	Port    uint16
 	Options string
 }
 

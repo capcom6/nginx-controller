@@ -1,25 +1,27 @@
 @baseUrl=http://localhost:4000/api/v1
 
 ###
-PUT {{baseUrl}}/test.example.com HTTP/1.1
+PUT {{baseUrl}}/hosts/test.example.com HTTP/1.1
 Content-Type: application/json
 
 {
     "upstream": [
         {
-            "host": "httpbin.org:443",
+            "host": "httpbin.org",
+            "port": 443,
             "weight": 1
         },
         {
-            "host": "google.com:443",
+            "host": "google.com",
+            "port": 443,
             "weight": 1
         }
     ]
 }
 
 ###
-DELETE {{baseUrl}}/test.example.com HTTP/1.1
+DELETE {{baseUrl}}/hosts/test.example.com HTTP/1.1
 
 ###
-GET http://localhost:4000 HTTP/1.1
+GET http://localhost:4000/ HTTP/1.1
 Host: test.example.com

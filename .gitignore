@@ -50,7 +50,8 @@ go.work
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -132,3 +133,5 @@ $RECYCLE.BIN/
 /api/docs.go
 
 .env
+
+conf.d/

@@ -16,8 +16,14 @@ func putHostnameToContext(hostname string, i PutHostname) nginx.Context {
 			options = fmt.Sprintf("weight=%d", upstream.Weight)
 		}
 
+		port := uint16(80)
+		if upstream.Port != 0 {
+			port = upstream.Port
+		}
+
 		upstreams[i] = nginx.UpstreamServer{
 			Host:    upstream.Host,
+			Port:    port,
 			Options: options,
 		}
 	}

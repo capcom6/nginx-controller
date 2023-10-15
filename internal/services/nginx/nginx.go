@@ -46,6 +46,9 @@ func (n *Nginx) Render(c Context, w io.Writer) error {
 
 func (n *Nginx) Apply(c Context) error {
 	confPath := path.Join(n.Config.ConfigPath, c.DomainName+".conf")
+	bakPath := confPath + ".bak"
+
+	os.Rename(confPath, bakPath)
 
 	file, err := os.OpenFile(confPath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 	if err != nil {
@@ -54,12 +57,20 @@ func (n *Nginx) Apply(c Context) error {
 
 	if err := n.Render(c, file); err != nil {
 		file.Close()
+		os.Rename(bakPath, confPath)
 		return fmt.Errorf("error rendering config file: %w", err)
 	}
 
 	file.Close()
 
-	return n.reload()
+	if err := n.reload(); err != nil {
+		os.Rename(bakPath, confPath)
+		return err
+	}
+
+	os.Remove(bakPath)
+
+	return nil
 }
 
 func (n *Nginx) Remove(hostname string) error {
