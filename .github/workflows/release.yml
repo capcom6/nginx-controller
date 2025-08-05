@@ -46,6 +46,6 @@ jobs:
           goos: ${{ matrix.os }}
           goarch: ${{ matrix.arch }}
           project_path: "./cmd/${{ env.APP_NAME }}"
-          goversion: "1.20"
+          goversion: "latest"
           ldflags: -X "github.com/capcom6/${{ env.APP_NAME }}/internal/config.appVersion=${{ env.APP_VERSION }}" -X "github.com/capcom6/${{ env.APP_NAME }}/internal/config.buildTime=${{ env.BUILD_TIME }}" -X github.com/capcom6/${{ env.APP_NAME }}/internal/config.gitCommit=${{ github.sha }} -X github.com/capcom6/${{ env.APP_NAME }}/internal/config.gitRef=${{ github.ref }}
           extra_files: LICENSE README.md
